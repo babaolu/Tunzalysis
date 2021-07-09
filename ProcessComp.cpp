@@ -8,19 +8,21 @@ try
 
 	while (loopVar)
 	{
-		std::cout << ">>";					// signifying the prompt
+		std::vector<Token> tokenVec;		// tokens for a single operation are held here
+
+		std::cout << "\n>>";					// signifying the prompt
 
 		std::cin >> firstChar;
 
 		if (isalpha(firstChar))
 		{
 			std::cin.putback(firstChar);
-			loopVar = processCommand();
+			loopVar = processCommand(tokenVec);
 		}
 		else
-		{
+		{								// direct arithmetic evaluation
 			std::cin.putback(firstChar);
-			processArith();
+			processArith(tokenVec);
 
 		}
 	}
@@ -31,33 +33,57 @@ catch (BadExpression& bex)
 	startProc();
 }
 
-bool processCommand()
+bool processCommand(std::vector<Token>& tokVec)
 {
 	std::string s;
-	if (std::cin >> s && s._Equal("quit"))
+	char charVal;
+	while (std::cin >> charVal && isalnum(charVal))		// an identifier must be alphanumeric
+	{
+		s += charVal;
+	}
+
+	if (s._Equal("quit"))			// quit to exit the program
 		return false;
 
-	std::cout << s << '\n';
+	switch (charVal)
+	{
+	case ':':
+		std::cout << s << '\n';
+		break;
+
+	case '=':						// assigning value to variable
+		add_to_var(s, processArith(tokVec));
+		break;
+		
+	default:						// most probably when a variable appears first during an evaluation
+		tokVec.push_back(Token{ s });
+		std::cin.putback(charVal);
+		processArith(tokVec);
+		break;
+
+	}
+
 	return true;
 }
 
-void processArith()
+double processArith(std::vector<Token>& tokVec)
 {
 	double number = 0;
 	unsigned int counter = 0;
 
-	std::vector<Token> tokenVec;
-	takeIn(tokenVec);
+	takeIn(tokVec);
 	
-	for (Token v : tokenVec)
+	/*for (Token v : tokVec)
 	{
 		if (v.getType() == Type::number) std::cout << v.getValue().realVal << ' ';
 		else std::cout << v.getValue().charVal << ' ';
-	}
+	}*/
 
-	number = add_sub(tokenVec, counter);
+	number = add_sub(tokVec, counter);
 
-	std::cout << '\n' << number << '\n';	
+	std::cout << '\n' << number << '\n';
+
+	return number;
 }
 
 double add_sub(std::vector<Token>& tokVec, unsigned int& i)
@@ -100,7 +126,11 @@ double div_mult(std::vector<Token>& tokVec, unsigned int& i)
 			val /= primary(tokVec, ++i);
 			break;
 
-		case'(':
+		case '%':
+			val = (int) val % (int) primary(tokVec, ++i);
+			break;
+
+		case'(':						// bracket without any sign added infront automatically evaluates as multipication
 			val *= primary(tokVec, i);
 			break;
 
@@ -155,3 +185,36 @@ double primary(std::vector<Token>& tokVec, unsigned int& i)
 	}
 	return val;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

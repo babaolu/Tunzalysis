@@ -4,8 +4,8 @@
 #include "ErrorHandle.h"
 
 void startProc();
-bool processCommand();
-void processArith();
+bool processCommand(std::vector<Token>&);
+double processArith(std::vector<Token>&);
 
 double add_sub(std::vector<Token>&, unsigned int&);
 double div_mult(std::vector<Token>&, unsigned int&);

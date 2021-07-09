@@ -2,9 +2,10 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 
 
-enum class Type { number, oprator };	// Either a number of an operator
+enum class Type { number, oprator };	// Either a number(literal or variable) of an operator
 
 class Token
 {
@@ -20,9 +21,11 @@ class Token
 public:
 	Token(double d) : typ{ Type::number } { val.realVal = d; }
 	Token(char c) : typ{ Type::oprator } { val.charVal = c; }
+	Token(std::string);
 
 	Type getType() { return typ; }
 	Value getValue(){ return val; }
 };
 
+void add_to_var(std::string, double);				// insert variable to varList
 void takeIn(std::vector<Token>&);			// Take in input and convert to Tokens
