@@ -1,0 +1,2 @@
+#define Tunzalysis_VERSION_MAJOR @Tunzalysis_VERSION_MAJOR@
+#define Tunzalysis_VERSION_MINOR @Tunzalysis_VERSION_MINOR@

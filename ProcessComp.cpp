@@ -42,7 +42,8 @@ bool processCommand(std::vector<Token>& tokVec)
 		s += charVal;
 	}
 
-	if (s._Equal("quit"))			// quit to exit the program
+	//if (s._Equal("quit"))			// quit to exit the program
+	if (s == std::string{"quit"})			// quit to exit the program
 		return false;
 
 	switch (charVal)
